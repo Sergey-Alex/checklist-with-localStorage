@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+    #inp, #list {
+        display: inline-block;
+    }
+    #list li{
+        cursor: pointer;
+        padding: 0;
+        list-style-type: none;
+    }
+    #list span {
+        margin-right: 5px;
+    }
+
+    #list .remove:hover {
+        text-decoration: underline;
+    }
+    #list .done  {
+        text-decoration: line-through;
+        color: red;
+    }
+</style>
+<input type="text" id="inp">
+<ul id="list"></ul>
+<body>
+<script>
+    let inp  = document.getElementById('inp');
+    let list = document.getElementById('list');
+    let key = 0;
+    let json = localStorage.getItem('arr');
+    
+    if (!json) {
+        arr = [];
+    } else {
+        arr = JSON.parse(json);
+    }
+    for (let elem of arr ) {
+        createList(elem)
+    }
+
+
+    inp.addEventListener('blur', function () {
+        let arr;
+        let json = localStorage.getItem('arr');
+        if (!json) {
+            arr = [];
+        } else {
+            arr = JSON.parse(json);
+        }
+
+        arr.push({text: this.value, done: false});
+
+        localStorage.setItem('arr', JSON.stringify(arr))
+
+        let li = document.createElement('li');
+
+        li.innerHTML = this.value;
+
+        list.appendChild(li);
+        this.innerHTML = '';
+
+
+    })
+
+function createList(elem) {
+    let li = document.createElement('li');
+    li.innerHTML = elem.text;
+
+    list.appendChild(li);
+
+    let del  = document.createElement('span');
+    del.innerHTML = ' remove';
+    del.addEventListener('click',function () {
+        if (li.dataset.num ) {
+            this.parentElement.parentElement.removeChild(this.parentElement);
+        }
+            let delValue = localStorage.getItem('arr');
+            let json = JSON.parse(delValue);
+
+            for (let i = 0; i < json.length; i++){
+               if (li.dataset.num == i){
+                  json.splice(i, 1);
+                 localStorage.setItem('arr', JSON.stringify(json));
+               }
+            }
+    })
+
+    li.appendChild(del);
+    li.dataset.num = key;
+    key++;
+    let done = document.createElement('span');
+    done.innerHTML = ' complete';
+
+    done.addEventListener('click', function () {
+            if (li.dataset.num ){
+                li.classList.add('done');
+            }
+
+    })
+    li.appendChild(done);
+
+}
+
+</script>
+</body>
+</html>
