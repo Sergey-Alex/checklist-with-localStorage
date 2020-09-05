@@ -35,6 +35,7 @@
     let inp  = document.getElementById('inp');
     let list = document.getElementById('list');
     let key = 0;
+    let arr;
     let json = localStorage.getItem('arr');
     
     if (!json) {
@@ -46,36 +47,27 @@
         createList(elem)
     }
 
-
     inp.addEventListener('blur', function () {
-        let arr;
         let json = localStorage.getItem('arr');
         if (!json) {
             arr = [];
         } else {
             arr = JSON.parse(json);
         }
-
         arr.push({text: this.value, done: false});
-
-        localStorage.setItem('arr', JSON.stringify(arr))
+        localStorage.setItem('arr', JSON.stringify(arr));
 
         let li = document.createElement('li');
-
-        li.innerHTML = this.value;
-
         list.appendChild(li);
-        this.innerHTML = '';
-
-
+        createList(inp.value);
+        li.innerHTML = this.value;
+        this.value = '';
     })
 
 function createList(elem) {
     let li = document.createElement('li');
     li.innerHTML = elem.text;
-
-    list.appendChild(li);
-
+     list.appendChild(li);
     let del  = document.createElement('span');
     del.innerHTML = ' remove';
     del.addEventListener('click',function () {
@@ -84,7 +76,6 @@ function createList(elem) {
         }
             let delValue = localStorage.getItem('arr');
             let json = JSON.parse(delValue);
-
             for (let i = 0; i < json.length; i++){
                if (li.dataset.num == i){
                   json.splice(i, 1);
@@ -98,12 +89,10 @@ function createList(elem) {
     key++;
     let done = document.createElement('span');
     done.innerHTML = ' complete';
-
     done.addEventListener('click', function () {
             if (li.dataset.num ){
                 li.classList.add('done');
             }
-
     })
     li.appendChild(done);
 
